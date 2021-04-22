@@ -1,0 +1,58 @@
+<!DOCTYPE html><html>
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>menu items</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+
+    <style> .btn{margin: 5px} </style>
+</head>
+
+<body>
+  <div class="container">
+      <h2>Select a Major</h2>
+      <div style='padding: 5px;'> 
+         <button type='button' class="btn btn-primary" onClick="getData('Buisiness Majors')">Buisness Majors</button> 
+         <button type='button' class="btn btn-primary" onClick="getData('CIT Majors')">CIT Majors</button> 
+      </div>
+	  <h3>We Filter our dataset by Major</h3>
+  <div id="majorChart"></div>
+  
+  </body>
+  <script type="text/x-handlebars-template" id="tableTemplate">
+      <table class="table table-striped">
+	  <tr><th>Name</th><th>Major</th><th>Midterm</th><th>Final</th></tr>
+	  {{#each rows}}
+                <tr>
+                     <td>{{name}}</td><td>{{major}}</td><td>{{midterm}}</td><td>{{final}}</td>
+                </tr>
+             {{/each}}
+      </table>
+  </script>
+  <script>
+  
+  function getData(select_major)
+   var request = new XMLHttpRequest();
+   var url = "cit5students";
+   request.open('GET', 'select_major');
+   
+   request.onload = function() {
+	var data = JSON.parse(request.responseText);
+	
+	select_major = data.filter(majorTable)
+	function majorTable(chart) {
+		return chart.major == selected_major
+		
+		 if (request.status == 200) {   
+            var templateText = document.getElementById('tableTemplate').innerHTML;
+            var compiledTemplateText = Handlebars.compile(templateText);       
+            compiledHtml = compiledTemplateText({ rows: selected_major })          
+            document.getElementById('majorChart').innerHTML = compiledHtml; 
+        }
+        else {
+            document.querySelector('#majorChart').innerHTML = "There was an error, or menu items not found";
+        }
+     }
+     
+     request.send(null);
+  }
+</script>
